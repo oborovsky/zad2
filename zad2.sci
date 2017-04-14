@@ -32,7 +32,7 @@ function dij = Dij(Un, N1, N2, t,a,b,c,d,k)
         for j=2:N2
             g1=(i-1)*h1;
             g2=(j-1)*h2;
-            dij(i,j) = t*((Un(i-1,j) -2*Un(i,j) + Un(i+1,j))/h1^2 +  (Un(i,j-1 ) -2*Un(i,j) + Un(i,j+1))/h2^2 + f(a+g1,c+g2));
+            dij(i,j) = t*((Un(i-1,j) -2*Un(i,j) + Un(i+1,j))/h1^2 +  (Un(i,j-1 ) -2*Un(i,j) + Un(i,j+1))/h2^2 - f(a+g1,c+g2));
             
         end
     end
@@ -109,7 +109,7 @@ L2 = d-c;
 h1 = L1/N1;
 h2 = L2/N2;
 
-t =100 ;//2*h^2/(sin(%pi*h));
+t = 10;//2*h^2/(sin(%pi*h));
 n = ceil(N1*log(1/e)/(2*%pi));
 printf("n=%d, t=%f\n",n,t);
 
