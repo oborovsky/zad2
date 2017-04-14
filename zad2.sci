@@ -9,39 +9,36 @@ deff('u=f3xx(x)','u=sin(x)*sin((%pi*x)/2)*(1+(%pi/2)^2)-%pi*cos(x)*cos((%pi*x)/2
 deff('u=f4xx(x)','u=-(sin(x)*sin((3*%pi*x)/2)*(1+(3*%pi/2)^2)-3*%pi*cos(x)*cos((3*%pi*x)/2))');
 
 
-function d = Dij(Un, N1, N2, t,a,b,c,d,k)
+function dij = Dij(Un, N1, N2, t,a,b,c,d,k)
     L1 = b-a;
     L2 = d-c;
     h1 = L1/N1;
     h2 = L2/N2;
-    d = zeros(N1,N2);
+    dij = zeros(N1+1,N2+1);
     
-    for i=1:N1
+    for i=1:N1+1
         g = (i-1)*h1;
-        d(i,1)= t * (f3xx(a+g) + f(a+g,c));
-        u = t*(f4xx(a+g)+f(a+g,d));
-//        printf("u=%f\n",u);
-//        d(i,N2)=t*(f4xx(a+g)+f(a+g,d));
-//        d(i,N2) = t * (f4xx(a+g) + f(a+g,d));
+        dij(i,1)= t * (f3xx(a+g) + f(a+g,c));
+        dij(i,N2+1) = t * (f4xx(a+g) + f(a+g,d));
     end
     
-    for j=1:N2-1
+    for j=1:N2
         g = (j-1)*h2;
-        d(1,j) = t * (f1yy(c+g) + f(a,c+g));
-        d(N1, j) = t * (f2yy(c+g) + f(b,c+g));
+        dij(1,j) = t * (f1yy(c+g) + f(a,c+g));
+        dij(N1+1, j) = t * (f2yy(c+g) + f(b,c+g));
     end
     
-    for i=2:N1-1
-        for j=2:N2-1
+    for i=2:N1
+        for j=2:N2
             g1=(i-1)*h1;
             g2=(j-1)*h2;
-            d(i,j) = t*((Un(i-1,j) -2*Un(i,j) + Un(i+1,j))/h1^2 +  (Un(i,j-1 ) -2*Un(i,j) + Un(i,j+1))/h2^2 + f(a+g1,c+g2));
+            dij(i,j) = t*((Un(i-1,j) -2*Un(i,j) + Un(i+1,j))/h1^2 +  (Un(i,j-1 ) -2*Un(i,j) + Un(i,j+1))/h2^2 + f(a+g1,c+g2));
             
         end
     end
 endfunction
 
-function ks12 = RU(d,N1,N2,t,a,b,c,d)
+function ks12 = RU(dij,N1,N2,t,a,b,c,d)
     L1 = b-a;
     L2 = d-c;
     h1 = L1/N1;
@@ -50,21 +47,21 @@ function ks12 = RU(d,N1,N2,t,a,b,c,d)
     k1 = t/h1^2;
     k2 = t/h2^2;
     k3 = 1/(1 + k1 + k2);
-    ks12 = zeros(N1,N2);
+    ks12 = zeros(N1+1,N2+1);
     
-    for i=1:N1
+    for i=1:N1+1
         g=(i-1)*h1;
         ks12(i,1) = f3(a+g);
     end
-    
-    for j=1:N2
+    disp(ks12);
+    for j=1:N2+1
         g=(j-1)*h2;
-        ks12(1,j) = f1(c+g);
+//        ks12(1,j) = f1(c+g);
     end
     
-    for j=2:N2
-        for i=2:N1
-            ks12(i,j) = k3 * ( d(i,j) + k1*ks12(i-1,j) + k2*ks12(i,j-1) ); 
+    for j=2:N2+1
+        for i=2:N1+1
+//            ks12(i,j) = k3 * ( dij(i,j) + k1*ks12(i-1,j) + k2*ks12(i,j-1) ); 
         end
     end
 endfunction
@@ -78,20 +75,20 @@ function ks1 = LD(ks12,N1,N2,t,a,b,c,d)
     k1 = t/h1^2;
     k2 = t/h2^2;
     k3 = 1/(1 + k1 + k2);
-    ks1 = zeros(N1,N2);
+    ks1 = zeros(N1+1,N2+1);
     
-    for i=1:N1
+    for i=1:N1+1
         g=(i-1)*h1;
-        ks12(i,N2) = f4(a+g);
+        ks12(i,N2+1) = f4(a+g);
     end
     
-    for j=1:N2
+    for j=1:N2+1
         g=(j-1)*h2
-        ks12(N1,j) = f2(c+g);
+        ks12(N1+1,j) = f2(c+g);
     end
     
-    for j=N2-1:1
-        for i=N1-1:1
+    for j=N2:1
+        for i=N1:1
             ks12(i,j) = k3 * ( ks12(i,j) + k1*ks1(i+1,j) + k2*ks1(i,j+1) ); 
         end
     end
@@ -111,23 +108,23 @@ t = 2*h^2/(sin(%pi*h));
 n = ceil(N1*log(1/e)/(2*%pi));
 printf("n=%d, t=%f\n",n,t);
 
-Un = zeros(N1,N2);
+Un = zeros(N1+1,N2+1);
 
-for i=1:N1
-    for j=1:N2
+for i=1:N1+1
+    for j=1:N2+1
         Un(i,j) = C;
     end
 end
 
-for k=0:n
+for k=0:0
     d = Dij(Un,N1,N2,t,a,b,c,d,k);
-    ks12 = RU(d,N1,N2,t,a,b,c,d);
-    ks1 = LD(ks12,N1,N2,t,a,b,c,d);
-    Un1 = Un + ks1;
-    pog = max(abs((Un1-Un)./t));
-        
-    if pog <= e  then
-        printf("OK\n");
-        break;
-    end
+    ks12 = RU(dij,N1,N2,t,a,b,c,d);
+//    ks1 = LD(ks12,N1,N2,t,a,b,c,d);
+//    Un1 = Un + ks1;
+//    pog = max(abs(ks1./t));
+//        
+//    if pog <= e  then
+//        printf("OK\n");
+//        break;
+//    end
 end
