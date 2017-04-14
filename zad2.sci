@@ -142,6 +142,7 @@ for l=0:0
     end
     x = a:h1:b;
     y = c:h2:d;
-    plot(x,Uex(:,N2/2)','-b');
-    plot(x,Un(:,N2/2)','*r');
+//    plot(x,Uex(:,N2/2)','-b');
+//    plot(x,Un(:,N2/2)','*r');
+//    plot3d1(x,y,Un);
 end
