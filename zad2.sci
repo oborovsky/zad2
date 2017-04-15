@@ -93,52 +93,69 @@ c = a;
 d = b;
 L1 = b-a;
 L2 = d-c;
-C = 0;
+//C = 0;
 
-e = 0.1;
+e = 0.01;
 
-N1 = 20;
-for l=0:0 
-    N1 = 2*N1;
-    N2 = N1;
-    h = (b-a)/N1;
-    
-    h1 = L1/N1;
-    h2 = L2/N2;
-    
-    t = 2*h^2/(sin(%pi*h));
-    n = ceil(N1*log(1/e)/(%pi));
-    printf("n=%d, t=%f\n",n,t);
-    
-    Un = zeros(N1+1,N2+1);
-    Uex = zeros(N1+1,N2+1);
-    for i=1:N1+1
-        for j=1:N2+1
-            g1 = (i-1)*h1;
-            g2 = (j-1)*h2;
-            Un(i,j) = C;
-            Uex(i,j) = u(a+g1,c+g2);
-        end
-    end
-    
-    for k=0:1000
-        ks1 = LD(Un,N1,N2,t,a,b,c,d);
-        ks2 = RU(ks1,N1,N2,t,a,b,c,d);
+
+step = [0];
+pogStep = [0];
+pogUn  = [0];
+NN = [0];
+tt = [0];
+CC = -100:1:100;
+for ll = 1:length(CC);
+    N1 = 5;
+    C = CC(ll);
+//    t = tv(ll);
+    for l=1:1 
+        N1 = 2*N1;
+        N2 = N1;
+        h = (b-a)/N1;
         
-        ks = ks2-ks1;
-        Un = ks2;
-        pog = max(abs(ks./t));
-        pog2 = max(abs(Uex-Un));
-            
-        if pog <= e  then
-            printf("OK k = %d\n",k);
-            printf("pog=%f, pog2=%f\n",pog,pog2);
-            break;
+        h1 = L1/N1;
+        h2 = L2/N2;
+        
+        Top = h^2/(sin(%pi*h));
+        t = Top;
+        n = ceil(N1*log(1/e)/(%pi));
+//        printf("n=%d, t=%f, Top=%f\n",n,t,Top);
+        
+        Un = zeros(N1+1,N2+1);
+        Uex = zeros(N1+1,N2+1);
+        for i=1:N1+1
+            for j=1:N2+1
+                g1 = (i-1)*h1;
+                g2 = (j-1)*h2;
+                Un(i,j) = C;
+                Uex(i,j) = u(a+g1,c+g2);
+            end
         end
+        
+        for k=0:1000
+            ks1 = LD(Un,N1,N2,t,a,b,c,d);
+            ks2 = RU(ks1,N1,N2,t,a,b,c,d);
+            
+            ks = ks2-ks1;
+            Un = ks2;
+            pog = max(abs(ks./t));
+            pog2 = max(abs(Uex-Un));
+                
+            if pog <= e  then
+//                printf("OK k = %d\n",k);
+//                printf("pog=%f, pog2=%f\n",pog,pog2);
+                pogStep(l) = pog;
+                pogUn(ll) = pog2;
+                step(ll) = k;
+                NN(ll) = N1;
+                tt(ll) = t;
+                break;
+            end
+        end
+        x = a:h1:b;
+        y = c:h2:d;
+    //    plot(x,Uex(:,N2/2)','-b');
+    //    plot(x,Un(:,N2/2)','*r');
+    //    plot3d1(x,y,Un);
     end
-    x = a:h1:b;
-    y = c:h2:d;
-//    plot(x,Uex(:,N2/2)','-b');
-//    plot(x,Un(:,N2/2)','*r');
-//    plot3d1(x,y,Un);
 end
