@@ -3,10 +3,6 @@ deff('u=f2(y)','u=sin(y)*sin((3*%pi*y)/2)');
 deff('u=f3(x)','u=-sin(x)*sin((%pi*x)/2)');
 deff('u=f4(x)','u=sin(x)*sin((3*%pi*x)/2)');
 deff('u=f(x,y)','u=-cos(x+y)*sin(x*y)*(2+x^2+y^2)-2*sin(x+y)*cos(x*y)*(x+y)');
-deff('u=f1yy(y)','u=sin(y)*sin((%pi*y)/2)*(1+(%pi/2)^2)-%pi*cos(y)*cos((%pi*y)/2)');
-deff('u=f2yy(y)','u=-(sin(y)*sin((3*%pi*y)/2)*(1+(3*%pi/2)^2)-3*%pi*cos(y)*cos((3*%pi*y)/2))');
-deff('u=f3xx(x)','u=sin(x)*sin((%pi*x)/2)*(1+(%pi/2)^2)-%pi*cos(x)*cos((%pi*x)/2)');
-deff('u=f4xx(x)','u=-(sin(x)*sin((3*%pi*x)/2)*(1+(3*%pi/2)^2)-3*%pi*cos(x)*cos((3*%pi*x)/2))');
 deff('z=u(x,y)','z=cos(x+y)*sin(x*y)');
 
 function ks2 = RU(ks1,N1,N2,t,a,b,c,d)
