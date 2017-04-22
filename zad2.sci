@@ -93,7 +93,7 @@ c = a;
 d = b;
 L1 = b-a;
 L2 = d-c;
-//C = 0;
+C = 0;
 
 e = 0.01;
 
@@ -103,10 +103,11 @@ pogStep = [0];
 pogUn  = [0];
 NN = [0];
 tt = [0];
-CC = -100:1:100;
-for ll = 1:length(CC);
-    N1 = 5;
-    C = CC(ll);
+//CC = -100:1:100;
+//tv = 0.01:0.01:1;
+for ll = 1:1;
+    N1 = 20;
+//    C = CC(ll);
 //    t = tv(ll);
     for l=1:1 
         N1 = 2*N1;
@@ -117,7 +118,7 @@ for ll = 1:length(CC);
         h2 = L2/N2;
         
         Top = h^2/(sin(%pi*h));
-        t = Top;
+        t = Top;//tv(ll);
         n = ceil(N1*log(1/e)/(%pi));
 //        printf("n=%d, t=%f, Top=%f\n",n,t,Top);
         
